@@ -1,0 +1,236 @@
+
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">🎓 Student Dashboard</h2>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h2>{{ my_items|length }}</h2>
+            <p>My Reported Items</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h2>{{ my_claims|length }}</h2>
+            <p>My Claim Requests</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h2>{{ received_claims|length }}</h2>
+            <p>Received Claims</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- MY REPORTED ITEMS -->
+
+<div class="card p-3 mb-4">
+
+    <h4 class="mb-3">📦 My Reported Items</h4>
+
+    {% if my_items %}
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-primary">
+                <tr>
+                    <th>Item Name</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in my_items %}
+
+                <tr>
+
+                    <td>{{ item.title }}</td>
+
+                    <td>{{ item.item_type }}</td>
+
+                    <td>{{ item.category }}</td>
+
+                    <td>{{ item.location }}</td>
+
+                    <td>{{ item.status }}</td>
+
+                    <td>
+                        <a href="{{ url_for('item_detail', item_id=item.id) }}"
+                           class="btn btn-sm btn-primary">
+                            View
+                        </a>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <p class="text-muted">
+        You have not reported any items yet.
+    </p>
+
+    {% endif %}
+
+</div>
+
+
+<!-- MY CLAIM REQUESTS -->
+
+<div class="card p-3 mb-4">
+
+    <h4 class="mb-3">📨 My Claim Requests</h4>
+
+    {% if my_claims %}
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered">
+
+            <thead class="table-primary">
+                <tr>
+                    <th>Item</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for claim in my_claims %}
+
+                <tr>
+                    <td>{{ claim.item_title }}</td>
+                    <td>{{ claim.message }}</td>
+                    <td>{{ claim.status }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <p class="text-muted">
+        You have not submitted any claims.
+    </p>
+
+    {% endif %}
+
+</div>
+
+
+<!-- RECEIVED CLAIM REQUESTS -->
+
+<div class="card p-3">
+
+    <h4 class="mb-3">📩 Received Claim Requests</h4>
+
+    {% if received_claims %}
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered">
+
+            <thead class="table-primary">
+                <tr>
+                    <th>Item</th>
+                    <th>Student</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for claim in received_claims %}
+
+                <tr>
+
+                    <td>{{ claim.item_title }}</td>
+
+                    <td>{{ claim.student_name }}</td>
+
+                    <td>{{ claim.message }}</td>
+
+                    <td>{{ claim.status }}</td>
+
+                    <td>
+
+                        {% if claim.status == 'Pending' %}
+
+                        <form method="POST"
+                              action="{{ url_for('update_claim', claim_id=claim.id) }}">
+
+                            <button name="status"
+value="Approved"
+                                    class="btn btn-success btn-sm mb-1">
+                                Approve
+                            </button>
+
+                            <button name="status"
+value="Rejected"
+                                    class="btn btn-danger btn-sm">
+                                Reject
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                        {{ claim.status }}
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <p class="text-muted">
+        No students have submitted claims for your items.
+    </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
