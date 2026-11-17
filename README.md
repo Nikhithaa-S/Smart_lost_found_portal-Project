@@ -104,7 +104,7 @@ The CampusFind application will now be available locally.
 
 **Project Name:** CampusFind – Smart College Lost & Found Portal
 
-**Developed By:** Nikhithaa
+**Developed By:** Nikhithaa S
 
 **Department:** Computer Science and Engineering (CSE)
 
